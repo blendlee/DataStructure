@@ -1,0 +1,33 @@
+class Node(object):
+    def __init__(self,key,element=None):
+        self.key=key
+        self.element=element
+        self.children={}
+
+
+
+
+class Trie:
+
+    def __init__(self):
+        self.root= Node(None)
+
+
+    def insert(self,word):
+        now = self.root
+        for letter in word:
+            if letter not in now.children:
+                now.children[letter] = Node(letter)
+            now=now.children[letter]
+
+        now.element = word
+
+    def search(self,word):
+        now = self.root
+        for letter in word:
+            if letter in now.children:
+                now = now.children[letter]
+            else:
+                return False
+        if now.element != None :
+            return True
