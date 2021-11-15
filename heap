@@ -1,0 +1,247 @@
+/*
+* Name:Lee Seung Hwan
+* Student ID #:2015146019
+*/
+
+/*
+* Do NOT import any additional packages/classes.
+* If you (un)intentionally use some additional packages/classes we did not
+* provide, you may receive a 0 for the homework.
+*/
+
+/* Min Heap stores entry with integer key and arbitrary type value */
+public final class Heap<V> implements IHeap<V> {
+    int idx;
+    int parent_idx;
+    int k;
+    Object v;
+    int size = 0;
+    int[] ak;
+    Object[] av;
+
+    V val;
+
+    /*
+     * Use some variables for your implementation.
+     */
+
+    public Heap() {
+        /*
+         * Constructor
+         * This function is an initializer for this class.
+         */
+    }
+
+    @Override
+    public void bottomUp(int[] keys, V[] values) throws IllegalStateException {
+        if(size != 0 && keys.length != values.length){
+            throw new IllegalStateException();
+        }
+        int[] arr_keys = new int[keys.length+1];
+        Object[] arr_vals = new Object[keys.length + 1];
+
+        arr_keys[1] = keys[0];
+        arr_vals[1] = values[0];
+
+
+
+        for (int i = 1; i < keys.length; i++) {
+            arr_keys[i + 1] = keys[i];
+            arr_vals[i + 1] = values[i];
+
+
+            idx = i + 1;
+            if (idx % 2 == 0) {
+                parent_idx = idx / 2;
+            } else {
+                parent_idx = (idx-1) / 2 ;
+            }
+
+            while (arr_keys[parent_idx] > arr_keys[idx]) {
+                k = arr_keys[idx];
+                v = arr_vals[idx];
+                arr_keys[idx] = arr_keys[parent_idx];
+                arr_vals[idx] = arr_vals[parent_idx];
+                arr_keys[parent_idx] = k;
+                arr_vals[parent_idx] = v;
+
+                idx = parent_idx;
+
+                if (idx ==1){
+                    break;
+                }
+                if (idx % 2 == 0) {
+                    parent_idx = idx / 2;
+                } else {
+                    parent_idx = (idx-1) / 2 ;
+                }
+
+
+            }
+
+
+        }
+        size =arr_keys.length;
+        ak=arr_keys;
+        av=arr_vals;
+    }
+    /*
+     * Function input:
+     *  keys: keys of entries
+     *  values: values of entries
+     *
+     * Job:
+     *  Construct a heap with entries (keys[i], values[i]).
+     *  You *must* construct a heap using *bottom-up construction*.
+     *  If the heap is not empty or lengths of keys and values are different,
+     *  throw an exception.
+     */
+
+
+    @Override
+    public void insert(int key, V value) {
+
+        if (size ==0){
+            size=2;
+            int[] arr_keys = new int[size];
+            Object[] arr_vals = new Object[size];
+            arr_keys[1]=key;
+            arr_vals[1]=value;
+            ak=arr_keys;
+            av=arr_vals;
+
+        }
+        else{
+            int[] arr_keys = new int[size+1];
+            Object[] arr_vals = new Object[size + 1];
+            for (int i = 1; i < size; i++){
+                arr_keys[i] = ak[i];
+                arr_vals[i] = av[i];
+
+            }
+            arr_keys[size]=key;
+            arr_vals[size]=value;
+
+            idx =size;
+
+            if (idx % 2 == 0) {
+                parent_idx = idx / 2;
+            } else {
+                parent_idx = (idx-1) / 2 ;
+            }
+
+
+            while (arr_keys[parent_idx] > arr_keys[idx]) {
+                k = arr_keys[idx];
+                v = arr_vals[idx];
+                arr_keys[idx] = arr_keys[parent_idx];
+                arr_vals[idx] = arr_vals[parent_idx];
+                arr_keys[parent_idx] = k;
+                arr_vals[parent_idx] = v;
+
+                idx = parent_idx;
+
+                if (idx ==1){
+                    break;
+                }
+                if (idx % 2 == 0) {
+                    parent_idx = idx / 2;
+                } else {
+                    parent_idx = (idx-1) / 2 ;
+                }
+
+
+            }
+            size=size+1;
+            ak=arr_keys;
+            av=arr_vals;
+
+        }
+
+
+
+        /*
+         * Function input:
+         *  key: key of an entry
+         *  value: value of an entry
+         *
+         * Job:
+         *  Insert an entry with the given key and value.
+         *  You can assume that each key of given entry is unique.
+         */
+    }
+
+    @Override
+    public V removeMin() throws IllegalStateException {
+        int[] arr_keys = new int[size-1];
+        Object[] arr_vals = new Object[size -1];
+        val = (V)av[1];
+        if(size==2){
+            size=0;
+        }
+        else{
+            for(int i =2 ; i<size;i++){
+                arr_keys[i-1]=ak[i];
+                arr_vals[i-1]=av[i];
+
+            }
+            ak=arr_keys;
+            av=arr_vals;
+            size=size-1;
+        }
+
+
+
+    return val;
+    }
+
+    @Override
+    public V min() throws IllegalStateException {
+        if(size ==0){
+            throw new IllegalStateException();
+        }
+        return (V)av[1];
+
+    }
+
+    @Override
+    public int size() {
+        /*
+         * Function input: Nothing
+         *
+         * Job:
+         *  Return the number of entries in the heap.
+         */
+        return size-1;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if(size==0){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+        }
+
+        @Override
+        public INode<V> getRoot () {
+            INode<V> root = new Node(ak[1],av[1]);
+
+
+
+
+
+            /*
+             * Function input: Nothing
+             *
+             * Job:
+             *  Return the root node of the heap.
+             *  If the heap is empty, throw an exception.
+             */
+            if (this.isEmpty()) throw new IllegalStateException();
+            return root;
+        }
+    }
