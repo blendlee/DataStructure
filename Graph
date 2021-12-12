@@ -1,0 +1,192 @@
+/*
+* Name:Lee Seung Hwan
+* Student ID#:2015146019
+*/
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+/*
+* Do NOT use any external packages/classes.
+* If you (un)intentionally use them we did not provide,
+* you will get 0.
+* Also do NOT use auto-import function on IDEs.
+* If the import statements change, you will also get 0.
+*/
+
+public final class Graph implements IGraph {
+    private int size;
+    private int[][] matrix;
+    private int[][] new_matrix;
+    int count;
+    int b;
+    int x;
+    int y;
+    int w;
+
+    public Graph(String filename) throws  IOException{
+        File file = new File(filename);
+        FileReader reader = new FileReader(file);
+        BufferedReader br1 = new BufferedReader(reader);
+
+        int count = 0 ;
+        String s;
+        while( (s=br1.readLine()) != null){
+            count++;
+        }
+        br1.close();
+        String[] str = new String[count];
+
+
+        int i=0;
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+
+        while((s= br.readLine()) != null){
+            str[i] = s;
+            String[] strarr = str[i].split(" ");
+            if(i==0){
+                String a = strarr[0];
+                b = Integer.parseInt(a);
+                size=b;
+                matrix= new int[size][size];
+            }
+
+            else{
+                String p = strarr[0];
+                String q = strarr[1];
+                String r = strarr[2];
+
+                x = Integer.parseInt(p);
+                y = Integer.parseInt(q);
+                w = Integer.parseInt(r);
+                matrix[x][y]=w;
+
+
+            }
+
+            i+=1;
+        }
+
+        /*
+        * Constructor
+        * This function is an initializer for this class.
+        */
+    }
+
+    @Override
+    public void insertVertex() {
+
+        size+=1;
+        new_matrix = new int[size][size];
+        for(int i=0; i <size-1;i++){
+            for(int j=0; j <size-1;j++){
+                new_matrix[i][j]=matrix[i][j];
+            }
+
+        }
+
+        matrix =new_matrix;
+        /**
+         * Input: None
+         * 
+         * Job:
+         *  Extend the number of verticies and label it as the last number.
+         */
+    }
+
+    @Override
+    public void deleteVertex(int n) {
+        size-=1;
+        new_matrix = new int[size][size];
+        for(int i=0; i <size;i++){
+            if(i<n){
+                for(int j=0; j <size;j++){
+                    if(j<n){
+                        new_matrix[i][j]=matrix[i][j];
+
+                    }
+                    else{
+                        new_matrix[i][j]=matrix[i][j+1];
+                    }
+                    }
+
+            }
+
+            else{
+                for(int j=0; j <size;j++){
+                    if(j<n){
+                        new_matrix[i][j]=matrix[i+1][j];
+
+                    }
+                    else{
+                        new_matrix[i][j]=matrix[i+1][j+1];
+                    }
+                }
+
+
+            }
+
+        }
+        matrix =new_matrix;
+        /**
+         * Input:
+         *  + n: the node to delete
+         * 
+         * Job:
+         *  Delete the node n and its connections to other nodes.
+         */
+    }
+
+    @Override
+    public void insertEdge(int u, int v, int w) {
+
+        matrix[u][v] =w;
+        /**
+         * Input:
+         *  + u: start vertex
+         *  + v: end vertex
+         *  + w: weight of the edge
+         * 
+         * Job:
+         *  Insert an edge from u to v with weight w.
+         */
+    }
+
+    @Override
+    public void deleteEdge(int u, int v) {
+        matrix[u][v]=0;
+        /**
+         * Input:
+         *  + u: start vertex
+         *  + v: end vertex
+         * 
+         * Job:
+         *  Delete an edge from u to v.
+         */
+    }
+
+    @Override
+    public int[][] matrix() {
+        /**
+         * Input: None
+         * 
+         * Job:
+         *  Return the adjacency matrix.
+         */
+        return matrix;
+    }
+
+    @Override
+    public int size() {
+        /**
+         * Input: None
+         * 
+         * Job:
+         *  Return the size.
+         */
+        return size;
+    }
+}
