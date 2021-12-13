@@ -1,0 +1,188 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+/*
+* Do NOT use any external packages/classes.
+* If you (un)intentionally use them we did not provide,
+* you will get 0.
+* Also do NOT use auto-import function on IDEs.
+* If the import statements change, you will also get 0.
+*/
+
+public final class MST implements IMST {
+    int size;
+    int[] distance;
+    int INF = Integer.MAX_VALUE;
+    int[][] graph;
+    public MST() {
+        /*
+        * Constructor
+        * This function is an initializer for this class.
+        */
+    }
+
+    class Node implements Comparable<Node>{
+        private int weight;
+        private int node;
+
+        public Node(int weight, int node){
+            this.weight =weight;
+            this.node = node;
+
+        }
+
+        public int compareTo(Node node){
+            return Integer.compare(this.weight, node.weight);
+        }
+
+        public int getWeight(){
+            return this.weight;
+        }
+
+        public int getNode(){
+            return this.node;
+        }
+    }
+
+
+    @Override
+    public int shortestPath(IGraph G, int u, int v) {
+        graph= G.matrix();
+
+        size =G.size();
+        distance =new int[size];
+        for(int i=0;i<size;i++){
+            distance[i]=INF;
+        }
+        distance[u]=0;
+
+
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+
+
+
+
+        Node start = new Node(0,u);
+
+
+
+        pq.add(start);
+
+        while ( !pq.isEmpty()){
+            Node current = pq.poll();
+            int dist = current.getWeight();
+            int now = current.getNode();
+
+            if(distance[now] < dist){
+                continue;
+            }
+            for(int j=0;j<size;j++){
+                if(graph[now][j] !=0){
+
+                    int cost = dist + graph[now][j];
+                    if(cost < distance[j]){
+                        distance[j] = cost;
+
+                        Node next = new Node(cost,j);
+                        pq.add(next);
+                    }
+
+                }
+            }
+
+
+
+
+        }
+
+
+
+
+
+        /**
+         * Dijkstra Algorithm
+         * Input:
+         *  + G: directed graph
+         *  + u: start vertex
+         *  + v: end vertex
+         * 
+         * Job:
+         *  Return the weight of the path from u to v.
+         *  If such path doesn't exist, return -1.
+         */
+        if(distance[v] == INF){
+            return -1;
+        }
+        return distance[v];
+    }
+
+    @Override
+    public int findMST(IGraph G) {
+        int[] distance = new int[G.size()];
+        int result=0;
+        int count=1;
+        boolean[] visited = new boolean[G.size()];
+
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        graph= G.matrix();
+
+        for(int x=0;x<G.size();x++){
+            for(int y=0;y<G.size();y++){
+                if(graph[x][y] !=0){
+                    graph[y][x] = graph[x][y];
+                }
+            }
+        }
+
+        for(int i=0 ; i <G.size();i++){
+            visited[i] = false;
+            if(graph[0][i] !=0){
+                Node n =new Node(graph[0][i],i);
+
+                pq.add(n);
+            }
+        }
+
+        visited[0] = true;
+
+        while( !pq.isEmpty()){
+
+            Node current =pq.poll();
+
+            int dist= current.getWeight();
+            int now = current.getNode();
+            if (visited[now] == true){
+                continue;
+            }
+            visited[now]=true;
+            count++;
+            result += dist;
+            for(int j=0;j<G.size();j++){
+                if(graph[now][j] !=0 && visited[j] == false){
+                    Node next = new Node(graph[now][j],j);
+                    pq.add(next);
+                }
+            }
+
+
+            }
+
+        if(count != G.size()){
+            return -1;
+        }
+
+
+
+
+        /**
+
+         * Input:
+         *  + G: directed graph
+         * 
+         * Job:
+         *  Return the total weight of the MST in G'.
+         *  If MST doesn't exist, return -1.
+         */
+        return result;
+    }
+}
