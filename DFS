@@ -1,0 +1,41 @@
+
+import java.util.List;
+import java.util.ArrayList;
+
+public final class SCC implements ISCC {
+    int[][] graph;
+    boolean[] visited= new boolean[100000];
+    public SCC() {
+        /*
+        * Constructor
+        * This function is an initializer for this class.
+        */
+    }
+
+    @Override
+    public boolean path(IGraph G, int u, int v) {
+        graph= G.matrix();
+        int size = G.size();
+
+        if(u==v){
+            return true;
+        }
+
+        visited[u] =true;
+
+        for(int i =0;i<G.size();i++){
+            if (graph[u][i] != 0 && !visited[i]){
+                return path(G,i,v);
+            }
+        }
+        /**
+         * Input:
+         *  + G: directed graph
+         *  + u: start vertex
+         *  + v: end vertex
+         * 
+         * Job:
+         *  Return whether there is a path from u to v or not.
+         */
+        return false;
+    }
