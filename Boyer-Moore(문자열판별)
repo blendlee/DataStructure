@@ -1,0 +1,46 @@
+
+
+string=str(input())
+
+n=int(input())
+a=[]
+for i in range(n):
+    a.append(str(input()))
+
+
+for word in a:
+    k=0
+    i=0
+    cut=[]
+    answer=''
+    while True:
+        if i >= len(string):
+            break
+        if string[i]==word[k]:
+            i+=1
+            k+=1
+            if k==len(word):
+                string = string[:i-len(word)] + '1'*k + string[i:] 
+                k=0              
+        else:
+            if i+len(word)-1 >= len(string):
+                break
+            if string[i+len(word)-1] in word:
+                count=0
+                for letter in word:
+                    count+=1
+                    if string[i+len(word)-1]==letter:
+                        i=i+len(word)-count
+                        k=0
+                        break
+            else:
+                i+=1
+                k=0
+    if string == '1'*len(string):
+        break
+
+
+if string == '1'*len(string):
+    print(1)
+else:
+    print(0)
